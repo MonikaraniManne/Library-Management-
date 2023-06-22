@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Infinite Scrolling and Lazy Loading</title>
+    <!-- Add Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    
+    <div class="container">
+        <h1 style="background-color: black; color: white;">List of books</h1>
+        <ul id="book-list" class="list-group"></ul>
+        <div id="loading" class="text-center">
+            <img src="loading.gif" alt="Loading..." />
+        </div>
+    </div>
+
+    <!-- Add jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        var startIndex = 0;
+        var maxResults = 20;
+
+        // Function to fetch book titles from the API
+        function fetchBookTitles() {
+            // Construct the API URL
+            var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=title&startIndex=" + startIndex + "&maxResults=" + maxResults;
+
+            // Make an AJAX request
+            $.ajax({
+                url: apiUrl,
+                dataType: "json",
+                success: function(data) {
+                    var books = data.items;
+                    var bookList = $("#book-list");
+
+                    // Iterate over each book and append it to the list
+                    for (var i = 0; i < books.length; i++) {
+                        var book = books[i];
+                        var title = book.volumeInfo.title;
+                        var listItem = $("<li>").addClass("list-group-item").text(title);
+                        bookList.append(listItem);
+                    }
+
+                    // Increment the startIndex for the next request
+                    startIndex += maxResults;
+
+                    // Hide the loading indicator
+                    $("#loading").hide();
+                },
+                error: function() {
+                    // Handle error
+                    console.log("Error occurred while fetching book titles.");
+                    $("#loading").hide();
+                }
+            });
+        }
+
+        // Function to check if the user has scrolled to the bottom of the page
+        function isScrollingToBottom() {
+            var documentHeight = $(document).height();
+            var windowHeight = $(window).height();
+            var scrollTop = $(window).scrollTop();
+
+            return (scrollTop + windowHeight >= documentHeight);
+        }
+
+        // Event listener for scrolling
+        $(window).scroll(function() {
+            if (isScrollingToBottom()) {
+                $("#loading").show();
+                fetchBookTitles();
+            }
+        });
+
+        // Initial fetch
+        fetchBookTitles();
+    </script>
+</body>
+</html>
+

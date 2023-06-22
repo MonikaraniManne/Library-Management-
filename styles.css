@@ -1,0 +1,38 @@
+#searchInput {
+  width: 300px;
+  height: 30px;
+  font-size: 16px;
+  padding: 5px;
+}
+
+#suggestions {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 5px;
+}
+
+#bookTable {
+  margin-top: 20px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#bookTable th,
+#bookTable td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+}
+
+.availability {
+  color: green;
+}
+
+.availability.not-available {
+  color: red;
+}
+h1, h2 {
+    text-align: center;
+  }
+  
